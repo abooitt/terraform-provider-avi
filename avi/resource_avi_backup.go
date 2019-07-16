@@ -14,38 +14,41 @@ import (
 
 func ResourceBackupSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"backup_config_ref": &schema.Schema{
+		"backup_config_ref": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"file_name": &schema.Schema{
+		"file_name": {
 			Type:     schema.TypeString,
 			Required: true,
 		},
-		"local_file_url": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"remote_file_url": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"scheduler_ref": &schema.Schema{
+		"local_file_url": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"tenant_ref": &schema.Schema{
+		"remote_file_url": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"timestamp": &schema.Schema{
+		"scheduler_ref": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
-		"uuid": &schema.Schema{
+		"tenant_ref": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"timestamp": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"uuid": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,

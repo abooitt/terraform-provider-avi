@@ -14,21 +14,34 @@ import (
 
 func ResourceSSOPolicySchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"authentication_policy": &schema.Schema{
+		"authentication_policy": {
 			Type:     schema.TypeSet,
 			Optional: true,
+			Computed: true,
 			Elem:     ResourceAuthenticationPolicySchema(),
 		},
-		"name": &schema.Schema{
-			Type:     schema.TypeString,
+		"authorization_policy": {
+			Type:     schema.TypeSet,
 			Optional: true,
+			Computed: true,
+			Elem:     ResourceAuthorizationPolicySchema(),
 		},
-		"tenant_ref": &schema.Schema{
+		"name": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"uuid": &schema.Schema{
+		"tenant_ref": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"type": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Default:  "SSO_TYPE_SAML",
+		},
+		"uuid": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,

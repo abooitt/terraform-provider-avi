@@ -14,30 +14,31 @@ import (
 
 func ResourceGslbGeoDbProfileSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"description": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"entries": &schema.Schema{
-			Type:     schema.TypeList,
-			Optional: true,
-			Elem:     ResourceGslbGeoDbEntrySchema(),
-		},
-		"is_federated": &schema.Schema{
-			Type:     schema.TypeBool,
-			Optional: true,
-			Default:  true,
-		},
-		"name": &schema.Schema{
-			Type:     schema.TypeString,
-			Required: true,
-		},
-		"tenant_ref": &schema.Schema{
+		"description": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"uuid": &schema.Schema{
+		"entries": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem:     ResourceGslbGeoDbEntrySchema(),
+		},
+		"is_federated": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			Default:  true,
+		},
+		"name": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"tenant_ref": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"uuid": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,

@@ -14,24 +14,27 @@ import (
 
 func ResourceProtocolParserSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"description": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"name": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"parser_code": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"tenant_ref": &schema.Schema{
+		"description": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"uuid": &schema.Schema{
+		"name": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"parser_code": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"tenant_ref": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"uuid": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,

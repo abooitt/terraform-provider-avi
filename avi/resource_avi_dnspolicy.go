@@ -14,29 +14,32 @@ import (
 
 func ResourceDnsPolicySchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"created_by": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"description": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"name": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"rule": &schema.Schema{
-			Type:     schema.TypeList,
-			Optional: true,
-			Elem:     ResourceDnsRuleSchema(),
-		},
-		"tenant_ref": &schema.Schema{
+		"created_by": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"uuid": &schema.Schema{
+		"description": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"name": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"rule": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem:     ResourceDnsRuleSchema(),
+		},
+		"tenant_ref": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"uuid": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,

@@ -14,83 +14,89 @@ import (
 
 func ResourceAlertConfigSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"action_group_ref": &schema.Schema{
+		"action_group_ref": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"alert_rule": &schema.Schema{
+		"alert_rule": {
 			Type:     schema.TypeSet,
 			Required: true,
 			Elem:     ResourceAlertRuleSchema(),
 		},
-		"autoscale_alert": &schema.Schema{
+		"autoscale_alert": {
 			Type:     schema.TypeBool,
 			Optional: true,
+			Computed: true,
 		},
-		"category": &schema.Schema{
+		"category": {
 			Type:     schema.TypeString,
 			Required: true,
 		},
-		"description": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"enabled": &schema.Schema{
-			Type:     schema.TypeBool,
-			Optional: true,
-			Default:  true,
-		},
-		"expiry_time": &schema.Schema{
-			Type:     schema.TypeInt,
-			Optional: true,
-			Default:  86400,
-		},
-		"name": &schema.Schema{
-			Type:     schema.TypeString,
-			Required: true,
-		},
-		"obj_uuid": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"object_type": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"recommendation": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"rolling_window": &schema.Schema{
-			Type:     schema.TypeInt,
-			Optional: true,
-			Default:  300,
-		},
-		"source": &schema.Schema{
-			Type:     schema.TypeString,
-			Required: true,
-		},
-		"summary": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"tenant_ref": &schema.Schema{
+		"description": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"threshold": &schema.Schema{
+		"enabled": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			Default:  true,
+		},
+		"expiry_time": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Default:  86400,
+		},
+		"name": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"obj_uuid": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"object_type": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"recommendation": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"rolling_window": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Default:  300,
+		},
+		"source": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"summary": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"tenant_ref": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"threshold": {
 			Type:     schema.TypeInt,
 			Optional: true,
 			Default:  1,
 		},
-		"throttle": &schema.Schema{
+		"throttle": {
 			Type:     schema.TypeInt,
 			Optional: true,
 			Default:  600,
 		},
-		"uuid": &schema.Schema{
+		"uuid": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,

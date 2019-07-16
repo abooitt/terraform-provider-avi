@@ -14,40 +14,45 @@ import (
 
 func ResourceWafCRSSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"description": &schema.Schema{
+		"description": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
-		"groups": &schema.Schema{
+		"groups": {
 			Type:     schema.TypeList,
 			Optional: true,
 			Elem:     ResourceWafRuleGroupSchema(),
 		},
-		"integrity": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"name": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"release_date": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"tenant_ref": &schema.Schema{
+		"integrity": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"uuid": &schema.Schema{
+		"name": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"version": &schema.Schema{
+		"release_date": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
+		},
+		"tenant_ref": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"uuid": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"version": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
 		},
 	}
 }

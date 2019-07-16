@@ -13,8 +13,8 @@ This data source is used to to get avi_serviceenginegroup objects.
 ## Example Usage
 
 ```hcl
-data "ServiceEngineGroup" "foo_ServiceEngineGroup" {
-    uuid = "ServiceEngineGroup-f9cf6b3e-a411-436f-95e2-2982ba2b217b"
+data "avi_serviceenginegroup" "foo_serviceenginegroup" {
+    uuid = "serviceenginegroup-f9cf6b3e-a411-436f-95e2-2982ba2b217b"
     name = "foo"
     cloud_ref = "/api/cloud/?tenant=admin&name=Default-Cloud"
   }
@@ -36,11 +36,11 @@ In addition to all arguments above, the following attributes are exported:
 * `aggressive_failure_detection` - Enable aggressive failover configuration for ha.
 * `algo` - In compact placement, virtual services are placed on existing ses until max_vs_per_se limit is reached.
 * `allow_burst` - Allow ses to be created using burst license.
-* `app_cache_percent` - A percent value of total se memory reserved for application caching.
+* `app_cache_percent` - A percent value of total se memory reserved for applicationcaching.
 * `app_learning_memory_percent` - A percent value of total se memory reserved for application learning.
 * `archive_shm_limit` - Amount of se memory in gb until which shared memory is collected in core archive.
-* `async_ssl` - Ssl handshakes will be handled by dedicated ssl threads.
-* `async_ssl_threads` - Number of async ssl threads per se_dp.
+* `async_ssl` - Ssl handshakes will be handled by dedicated ssl threads.requires se reboot.
+* `async_ssl_threads` - Number of async ssl threads per se_dp.requires se reboot.
 * `auto_rebalance` - If set, virtual services will be automatically migrated when load on an se is less than minimum or more than maximum thresholds.
 * `auto_rebalance_capacity_per_se` - Capacities of se for auto rebalance for each criteria.
 * `auto_rebalance_criteria` - Set of criteria for se auto rebalance.
@@ -51,7 +51,7 @@ In addition to all arguments above, the following attributes are exported:
 * `cloud_ref` - It is a reference to an object of type cloud.
 * `config_debugs_on_all_cores` - Enable config debugs on all cores of se.
 * `connection_memory_percentage` - Percentage of memory for connection state.
-* `cpu_reserve` - General description.
+* `cpu_reserve` - Boolean flag to set cpu_reserve.
 * `cpu_socket_affinity` - Allocate all the cpu cores for the service engine virtual machines  on the same cpu socket.
 * `custom_securitygroups_data` - Custom security groups to be associated with data vnics for se instances in openstack and aws clouds.
 * `custom_securitygroups_mgmt` - Custom security groups to be associated with management vnic for se instances in openstack and aws clouds.
@@ -59,7 +59,7 @@ In addition to all arguments above, the following attributes are exported:
 * `data_network_id` - Subnet used to spin up the data nic for service engines, used only for azure cloud.
 * `datascript_timeout` - Number of instructions before datascript times out.
 * `dedicated_dispatcher_core` - Dedicate the core that handles packet receive/transmit from the network to just the dispatching function.
-* `description` - General description.
+* `description` - User defined description for the object.
 * `disable_avi_securitygroups` - By default, avi creates and manages security groups along with custom sg provided by user.
 * `disable_csum_offloads` - Stop using tcp/udp and ip checksum offload features of nics.
 * `disable_gro` - Disable generic receive offload (gro) in dpdk poll-mode driver packet receive path.
@@ -67,7 +67,8 @@ In addition to all arguments above, the following attributes are exported:
 * `disable_tso` - Disable tcp segmentation offload (tso) in dpdk poll-mode driver packet transmit path.
 * `disk_per_se` - Amount of disk space for each of the service engine virtual machines.
 * `distribute_load_active_standby` - Use both the active and standby service engines for virtual service placement in the legacy active standby ha mode.
-* `distribute_queues` - Distributes queue ownership among cores so multiple cores handle dispatcher duties.
+* `distribute_queues` - Distributes queue ownership among cores so multiple cores handle dispatcher duties.requires se reboot.
+* `distribute_vnics` - Distributes vnic ownership among cores so multiple cores handle dispatcher duties.requires se reboot.
 * `enable_gratarp_permanent` - Enable gratarp for vip_ip.
 * `enable_hsm_priming` - (this is a beta feature).
 * `enable_multi_lb` - Applicable only for azure cloud with basic sku lb.
@@ -107,7 +108,7 @@ In addition to all arguments above, the following attributes are exported:
 * `max_scaleout_per_vs` - Maximum number of active service engines for the virtual service.
 * `max_se` - Maximum number of services engines in this group.
 * `max_vs_per_se` - Maximum number of virtual services that can be placed on a single service engine.
-* `mem_reserve` - General description.
+* `mem_reserve` - Boolean flag to set mem_reserve.
 * `memory_for_config_update` - Indicates the percent of memory reserved for config updates.
 * `memory_per_se` - Amount of memory for each of the service engine virtual machines.
 * `mgmt_network_ref` - Management network to use for avi service engines.
@@ -117,7 +118,7 @@ In addition to all arguments above, the following attributes are exported:
 * `min_se` - Minimum number of services engines in this group (relevant for se autorebalance only).
 * `minimum_connection_memory` - Indicates the percent of memory reserved for connections.
 * `n_log_streaming_threads` - Number of threads to use for log streaming.
-* `name` - General description.
+* `name` - Name of the object.
 * `non_significant_log_throttle` - This setting limits the number of non-significant logs generated per second per core on this se.
 * `num_dispatcher_cores` - Number of dispatcher cores (0,1,2,4,8 or 16).
 * `num_flow_cores_sum_changes_to_ignore` - Number of changes in num flow cores sum to ignore.
@@ -128,27 +129,36 @@ In addition to all arguments above, the following attributes are exported:
 * `per_app` - Per-app se mode is designed for deploying dedicated load balancers per app (vs).
 * `placement_mode` - If placement mode is 'auto', virtual services are automatically placed on service engines.
 * `realtime_se_metrics` - Enable or disable real time se metrics.
-* `reboot_on_stop` - Reboot the system if the se is stopped.
+* `reboot_on_panic` - Reboot the vm or host on kernel panic.
 * `se_bandwidth_type` - Select the se bandwidth for the bandwidth license.
 * `se_deprovision_delay` - Duration to preserve unused service engine virtual machines before deleting them.
-* `se_dos_profile` - General description.
-* `se_dpdk_pmd` - Determines if dpdk pool mode driver should be used or not   0  automatically determine based on hypervisor/nic type 1  unconditionally use dpdk poll mode driver 2  don't use dpdk poll mode driver.
-* `se_flow_probe_retries` - Flow probe retry count if no replies are received.
-* `se_flow_probe_timer` - Timeout in milliseconds for flow probe entries.
+* `se_dos_profile` - Dict settings for serviceenginegroup.
+* `se_dp_vnic_queue_stall_event_sleep` - Time (in seconds) service engine waits for after generating a vnic transmit queue stall event before resetting thenic.
+* `se_dp_vnic_queue_stall_threshold` - Number of consecutive transmit failures to look for before generating a vnic transmit queue stall event.
+* `se_dp_vnic_queue_stall_timeout` - Time (in milliseconds) to wait for network/nic recovery on detecting a transmit queue stall after which service engine resets the nic.
+* `se_dp_vnic_restart_on_queue_stall_count` - Number of consecutive transmit queue stall events in se_dp_vnic_stall_se_restart_window to look for before restarting se.
+* `se_dp_vnic_stall_se_restart_window` - Window of time (in seconds) during which se_dp_vnic_restart_on_queue_stall_count number of consecutive stalls results in a se restart.
+* `se_dpdk_pmd` - Determines if dpdk pool mode driver should be used or not   0  automatically determine based on hypervisor/nic type 1  unconditionally use dpdk poll mode driver 2  don't use dpdk poll mode driver.requires se reboot.
+* `se_flow_probe_retries` - Flow probe retry count if no replies are received.requires se reboot.
+* `se_flow_probe_retry_timer` - Timeout in milliseconds for flow probe retries.requires se reboot.
 * `se_ipc_udp_port` - Udp port for se_dp ipc in docker bridge mode.
+* `se_lro` - Enable or disable large receive optimization for vnics.
 * `se_name_prefix` - Prefix to use for virtual machine name of service engines.
 * `se_pcap_lookahead` - Enables lookahead mode of packet receive in pcap mode.
+* `se_pcap_pkt_count` - Max number of packets the pcap interface can hold and if the value is 0 the optimum value will be chosen.
+* `se_pcap_pkt_sz` - Max size of each packet in the pcap interface.
 * `se_pcap_reinit_frequency` - Frequency in seconds at which periodically a pcap reinit check is triggered.
 * `se_pcap_reinit_threshold` - Threshold for input packet receive errors in pcap mode exceeding which a pcap reinit is triggered.
 * `se_probe_port` - Tcp port on se where echo service will be run.
 * `se_remote_punt_udp_port` - Udp port for punted packets in docker bridge mode.
 * `se_routing` - Enable routing via service engine datapath.
-* `se_sb_dedicated_core` - Sideband traffic will be handled by a dedicated core.
-* `se_sb_threads` - Number of sideband threads per se.
+* `se_sb_dedicated_core` - Sideband traffic will be handled by a dedicated core.requires se reboot.
+* `se_sb_threads` - Number of sideband threads per se.requires se reboot.
 * `se_thread_multiplier` - Multiplier for se threads based on vcpu.
 * `se_tracert_port_range` - Traceroute port range.
 * `se_tunnel_mode` - Determines if dsr from secondary se is active or not  0  automatically determine based on hypervisor type.
-* `se_tunnel_udp_port` - Udp port for tunneled packets from secondary to primary se in docker bridge mode.
+* `se_tunnel_udp_port` - Udp port for tunneled packets from secondary to primary se in docker bridge mode.requires se reboot.
+* `se_tx_batch_size` - Number of packets to batch for transmit to the nic.
 * `se_udp_encap_ipc` - Determines if se-se ipc messages are encapsulated in a udp header  0  automatically determine based on hypervisor type.
 * `se_use_dpdk` - Determines if dpdk library should be used or not   0  automatically determine based on hypervisor type 1  use dpdk if pcap is not enabled 2  don't use dpdk.
 * `se_vs_hb_max_pkts_in_batch` - Maximum number of aggregated vs heartbeat packets to send in a batch.
@@ -162,13 +172,13 @@ In addition to all arguments above, the following attributes are exported:
 * `tenant_ref` - It is a reference to an object of type tenant.
 * `udf_log_throttle` - This setting limits the number of udf logs generated per second per core on this se.
 * `use_standard_alb` - Use standard sku azure load balancer.
-* `uuid` - General description.
-* `vcenter_clusters` - General description.
+* `uuid` - Unique object identifier of the object.
+* `vcenter_clusters` - Dict settings for serviceenginegroup.
 * `vcenter_datastore_mode` - Enum options - vcenter_datastore_any, vcenter_datastore_local, vcenter_datastore_shared.
-* `vcenter_datastores` - General description.
-* `vcenter_datastores_include` - General description.
+* `vcenter_datastores` - List of list.
+* `vcenter_datastores_include` - Boolean flag to set vcenter_datastores_include.
 * `vcenter_folder` - Folder to place all the service engine virtual machines in vcenter.
-* `vcenter_hosts` - General description.
+* `vcenter_hosts` - Dict settings for serviceenginegroup.
 * `vcpus_per_se` - Number of vcpus for each of the service engine virtual machines.
 * `vip_asg` - When vip_asg is set, vip configuration will be managed by avi.user will be able to configure vip_asg or vips individually at the time of create.
 * `vs_host_redundancy` - Ensure primary and secondary service engines are deployed on different physical hosts.
@@ -180,6 +190,6 @@ In addition to all arguments above, the following attributes are exported:
 * `vs_switchover_timeout` - During se upgrade in a legacy active/standby segroup, time to wait for the new primary se to accept flows before marking the switchover done.
 * `vss_placement` - Parameters to place virtual services on only a subset of the cores of an se.
 * `vss_placement_enabled` - If set, virtual services will be placed on only a subset of the cores of an se.
-* `waf_mempool` - Enable memory pool for waf.
-* `waf_mempool_size` - Memory pool size used for waf.
+* `waf_mempool` - Enable memory pool for waf.requires se reboot.
+* `waf_mempool_size` - Memory pool size used for waf.requires se reboot.
 

@@ -14,25 +14,26 @@ import (
 
 func ResourceAlertSyslogConfigSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"description": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"name": &schema.Schema{
-			Type:     schema.TypeString,
-			Required: true,
-		},
-		"syslog_servers": &schema.Schema{
-			Type:     schema.TypeList,
-			Optional: true,
-			Elem:     ResourceAlertSyslogServerSchema(),
-		},
-		"tenant_ref": &schema.Schema{
+		"description": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"uuid": &schema.Schema{
+		"name": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"syslog_servers": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem:     ResourceAlertSyslogServerSchema(),
+		},
+		"tenant_ref": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"uuid": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,

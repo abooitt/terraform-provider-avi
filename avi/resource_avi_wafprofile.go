@@ -14,30 +14,32 @@ import (
 
 func ResourceWafProfileSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"config": &schema.Schema{
+		"config": {
 			Type:     schema.TypeSet,
 			Optional: true,
+			Computed: true,
 			Elem:     ResourceWafConfigSchema(),
 		},
-		"description": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"files": &schema.Schema{
-			Type:     schema.TypeList,
-			Optional: true,
-			Elem:     ResourceWafDataFileSchema(),
-		},
-		"name": &schema.Schema{
-			Type:     schema.TypeString,
-			Required: true,
-		},
-		"tenant_ref": &schema.Schema{
+		"description": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"uuid": &schema.Schema{
+		"files": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem:     ResourceWafDataFileSchema(),
+		},
+		"name": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"tenant_ref": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"uuid": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,

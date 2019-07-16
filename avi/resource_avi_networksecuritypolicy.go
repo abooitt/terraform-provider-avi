@@ -14,33 +14,37 @@ import (
 
 func ResourceNetworkSecurityPolicySchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"cloud_config_cksum": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"created_by": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"description": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"name": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"rules": &schema.Schema{
-			Type:     schema.TypeList,
-			Optional: true,
-			Elem:     ResourceNetworkSecurityRuleSchema(),
-		},
-		"tenant_ref": &schema.Schema{
+		"cloud_config_cksum": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"uuid": &schema.Schema{
+		"created_by": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"description": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"name": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"rules": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem:     ResourceNetworkSecurityRuleSchema(),
+		},
+		"tenant_ref": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"uuid": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,

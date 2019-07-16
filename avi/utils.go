@@ -20,6 +20,9 @@ import (
 
 var post_not_allowed = [...]string{"systemconfiguration", "cluster"}
 
+// It takes the terraform plan data and schema and converts it into Avi JSON
+// It recursively resolves the data type of the terraform schema and converts scalar to scalar, Set to dictionary,
+// and list to list.
 func SchemaToAviData(d interface{}, s map[string]*schema.Schema) (interface{}, error) {
 	switch d.(type) {
 	default:
@@ -59,10 +62,12 @@ func SchemaToAviData(d interface{}, s map[string]*schema.Schema) (interface{}, e
 		m := make(map[string]interface{})
 		r := d.(*schema.ResourceData)
 		for k, v := range s {
-			if obj, err := SchemaToAviData(r.Get(k), nil); err == nil && obj != nil && obj != "" {
-				m[k] = obj
-			} else if err != nil {
-				log.Printf("[ERROR] SchemaToAviData %v in converting k: %v v: %v", err, k, v)
+			if data, ok := r.GetOk(k); ok {
+				if obj, err := SchemaToAviData(data, nil); err == nil && obj != nil && obj != "" {
+					m[k] = obj
+				} else if err != nil {
+					log.Printf("[ERROR] SchemaToAviData %v in converting k: %v v: %v", err, k, v)
+				}
 			}
 		}
 		return m, nil
@@ -75,7 +80,12 @@ func CommonHash(v interface{}) int {
 	return hashcode.String("avi")
 }
 
+// It sets default values in the terraform resources to avoid diffs for scalars.
 func SetDefaultsInAPIRes(api_res interface{}, d_local interface{}, s map[string]*schema.Schema) (interface{}, error) {
+	if api_res == nil {
+		log.Printf("[ERROR] SetDefaultsInAPIRes got nil for %v", s)
+		return api_res, nil
+	}
 	switch d_local.(type) {
 	default:
 	case map[string]interface{}:
@@ -89,31 +99,27 @@ func SetDefaultsInAPIRes(api_res interface{}, d_local interface{}, s map[string]
 						//Getting default values from schema
 						default_val, err := dval.DefaultValue()
 						if err != nil {
-							log.Printf("[ERROR] SetDefaultsInAPIRes %v", err)
+							log.Printf("[ERROR] SetDefaultsInAPIRes did not get default value from schema err %v %v",
+								err, default_val)
 						} else {
 							if default_val != nil {
 								api_res.(map[string]interface{})[k] = default_val
 							}
 						}
-
 					}
 				}
 			//d_local nested dictionary.
 			case map[string]interface{}:
-				s2, err := s[k]
-				//As err returned is boolean value
-				if err {
-					log.Printf("[ERROR] SetDefaultsInAPIRes %v", err)
-				}
-				switch s2.Elem.(type) {
-				default:
-				case *schema.Resource:
-					api_res1, err := SetDefaultsInAPIRes(api_res.(map[string]interface{})[k], v, s2.Elem.(*schema.Resource).Schema)
-					if err != nil {
-						log.Printf("[ERROR] SetDefaultsInAPIRes %v", err)
-
-					} else {
-						api_res.(map[string]interface{})[k] = api_res1
+				if s2, ok := s[k]; ok {
+					switch s2.Elem.(type) {
+					default:
+					case *schema.Resource:
+						api_res1, err := SetDefaultsInAPIRes(api_res.(map[string]interface{})[k], v, s2.Elem.(*schema.Resource).Schema)
+						if err != nil {
+							log.Printf("[ERROR] SetDefaultsInAPIRes %v", err)
+						} else {
+							api_res.(map[string]interface{})[k] = api_res1
+						}
 					}
 				}
 			//d_local is array of dictionaries.
@@ -123,39 +129,30 @@ func SetDefaultsInAPIRes(api_res interface{}, d_local interface{}, s map[string]
 					varray2 := api_res.(map[string]interface{})[k].([]interface{})
 					//getting schema for nested object.
 					s2, err := s[k]
+					var dst, src []interface{}
 					//As err returned is boolean value
 					if !err {
-						log.Printf("[ERROR] SetDefaultsInAPIRes %v", err)
+						log.Printf("[ERROR] SetDefaultsInAPIRes in fetching k %v err %v", k, err)
 					}
 					if len(varray2) > len(v.([]interface{})) {
-						for x, y := range v.([]interface{}) {
-							switch s2.Elem.(type) {
-							default:
-							case *schema.Resource:
-								obj, err := SetDefaultsInAPIRes(varray2[x], y, s2.Elem.(*schema.Resource).Schema)
-								if err != nil {
-									log.Printf("[ERROR] SetDefaultsInAPIRes %v", err)
-								} else {
-									objList = append(objList, obj)
-								}
-							case *schema.Schema:
-								objList = append(objList, v.([]interface{})[x])
-							}
-						}
+						dst = varray2
+						src = v.([]interface{})
 					} else {
-						for x, y := range varray2 {
-							switch s2.Elem.(type) {
-							default:
-							case *schema.Resource:
-								obj, err := SetDefaultsInAPIRes(y, v.([]interface{})[x], s2.Elem.(*schema.Resource).Schema)
-								if err != nil {
-									log.Printf("[ERROR] SetDefaultsInAPIRes %v", err)
-								} else {
-									objList = append(objList, obj)
-								}
-							case *schema.Schema:
-								objList = append(objList, v.([]interface{})[x])
+						dst = v.([]interface{})
+						src = varray2
+					}
+					for x, y := range src {
+						switch s2.Elem.(type) {
+						default:
+						case *schema.Resource:
+							obj, err := SetDefaultsInAPIRes(dst[x], y, s2.Elem.(*schema.Resource).Schema)
+							if err != nil {
+								log.Printf("[ERROR] SetDefaultsInAPIRes err %v in x %v y %v", err, x, y)
+							} else {
+								objList = append(objList, obj)
 							}
+						case *schema.Schema:
+							objList = append(objList, src[x])
 						}
 					}
 				}
@@ -164,9 +161,11 @@ func SetDefaultsInAPIRes(api_res interface{}, d_local interface{}, s map[string]
 		}
 	}
 	return api_res, nil
-
 }
 
+// It takes the Avi JSON data and fills in the terraform data during API read.
+// It takes input as the top level schema and it uses that to properly create the corresponding terraform resource data
+// It also checks whether a given Avi key is defined in the schema before attempting to fill the data.
 func ApiDataToSchema(adata interface{}, d interface{}, t map[string]*schema.Schema) (interface{}, error) {
 	switch adata.(type) {
 	default:
@@ -182,11 +181,9 @@ func ApiDataToSchema(adata interface{}, d interface{}, t map[string]*schema.Sche
 					log.Printf("[ERROR] ApiDataToSchema %v in converting k: %v v: %v", err, k, v)
 				}
 			}
-			//var s schema.Set
 			objs := []interface{}{}
 			objs = append(objs, m)
 			s := schema.NewSet(CommonHash, objs)
-			//s.Add(m)
 			return s, nil
 		} else {
 			for k, v := range adata.(map[string]interface{}) {
@@ -240,6 +237,9 @@ func SetIDFromObj(d *schema.ResourceData, robj interface{}) {
 	}
 }
 
+// It is generic API to create and update any Avi REST resource. It handles special situations with cloud
+// and tenant filters as objects may already be present. If the resource does not exist it will try to
+// create it. In case, it is present then automatically converts to PUT semantics.
 func ApiCreateOrUpdate(d *schema.ResourceData, meta interface{}, objType string, s map[string]*schema.Schema,
 	opts ...bool) error {
 	client := meta.(*clients.AviClient)
@@ -436,6 +436,7 @@ func ApiRead(d *schema.ResourceData, meta interface{}, objType string, s map[str
 }
 
 func ResourceImporter(d *schema.ResourceData, meta interface{}, objType string, s map[string]*schema.Schema) ([]*schema.ResourceData, error) {
+	log.Printf("[DEBUG] ResourceImporter obuType%v id %v\n", objType, d.Id())
 	if d.Id() != "" {
 		// return the ID based import
 		return []*schema.ResourceData{d}, nil

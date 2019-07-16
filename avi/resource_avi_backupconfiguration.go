@@ -14,66 +14,76 @@ import (
 
 func ResourceBackupConfigurationSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"aws_access_key": &schema.Schema{
+		"aws_access_key": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
-		"aws_bucket_id": &schema.Schema{
+		"aws_bucket_id": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
-		"aws_secret_access": &schema.Schema{
+		"aws_secret_access": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
-		"backup_file_prefix": &schema.Schema{
+		"backup_file_prefix": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
-		"backup_passphrase": &schema.Schema{
+		"backup_passphrase": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Computed: true,
 		},
-		"maximum_backups_stored": &schema.Schema{
+		"maximum_backups_stored": {
 			Type:     schema.TypeInt,
 			Optional: true,
 			Default:  4,
 		},
-		"name": &schema.Schema{
+		"name": {
 			Type:     schema.TypeString,
 			Required: true,
 		},
-		"remote_directory": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"remote_hostname": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"save_local": &schema.Schema{
-			Type:     schema.TypeBool,
-			Optional: true,
-		},
-		"ssh_user_ref": &schema.Schema{
+		"remote_directory": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"tenant_ref": &schema.Schema{
+		"remote_hostname": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"upload_to_remote_host": &schema.Schema{
+		"save_local": {
 			Type:     schema.TypeBool,
 			Optional: true,
+			Computed: true,
 		},
-		"upload_to_s3": &schema.Schema{
+		"ssh_user_ref": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"tenant_ref": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"upload_to_remote_host": {
 			Type:     schema.TypeBool,
 			Optional: true,
+			Computed: true,
 		},
-		"uuid": &schema.Schema{
+		"upload_to_s3": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			Computed: true,
+		},
+		"uuid": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,

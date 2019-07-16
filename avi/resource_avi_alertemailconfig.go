@@ -14,28 +14,30 @@ import (
 
 func ResourceAlertEmailConfigSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"cc_emails": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"description": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"name": &schema.Schema{
-			Type:     schema.TypeString,
-			Required: true,
-		},
-		"tenant_ref": &schema.Schema{
+		"cc_emails": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"to_emails": &schema.Schema{
+		"description": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"name": {
 			Type:     schema.TypeString,
 			Required: true,
 		},
-		"uuid": &schema.Schema{
+		"tenant_ref": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"to_emails": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"uuid": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,

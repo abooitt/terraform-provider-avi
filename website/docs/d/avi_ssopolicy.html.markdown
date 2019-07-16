@@ -13,8 +13,8 @@ This data source is used to to get avi_ssopolicy objects.
 ## Example Usage
 
 ```hcl
-data "SSOPolicy" "foo_SSOPolicy" {
-    uuid = "SSOPolicy-f9cf6b3e-a411-436f-95e2-2982ba2b217b"
+data "avi_ssopolicy" "foo_ssopolicy" {
+    uuid = "ssopolicy-f9cf6b3e-a411-436f-95e2-2982ba2b217b"
     name = "foo"
 }
 ```
@@ -29,7 +29,9 @@ data "SSOPolicy" "foo_SSOPolicy" {
 In addition to all arguments above, the following attributes are exported:
 
 * `authentication_policy` - Authentication policy settings.
+* `authorization_policy` - Authorization policy settings.
 * `name` - Name of the sso policy.
 * `tenant_ref` - Uuid of the tenant.
+* `type` - Sso policy type.
 * `uuid` - Uuid of the sso policy.
 

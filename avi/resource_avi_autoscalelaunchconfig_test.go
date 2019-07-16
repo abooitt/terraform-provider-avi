@@ -20,14 +20,26 @@ func TestAVIAutoScaleLaunchConfigBasic(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAVIAutoScaleLaunchConfigExists("avi_autoscalelaunchconfig.testAutoScaleLaunchConfig"),
 					resource.TestCheckResourceAttr(
-						"avi_autoscalelaunchconfig.testAutoScaleLaunchConfig", "name", "testdefault-autoscalelaunchconfig")),
+						"avi_autoscalelaunchconfig.testAutoScaleLaunchConfig", "name", "test-default-autoscalelaunchconfig-abc"),
+					resource.TestCheckResourceAttr(
+						"avi_autoscalelaunchconfig.testAutoScaleLaunchConfig", "use_external_asg", "true"),
+				),
 			},
 			{
 				Config: testAccAVIAutoScaleLaunchConfigupdatedConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckAVIAutoScaleLaunchConfigExists("avi_autoscalelaunchconfig.testAutoScaleLaunchConfig"),
 					resource.TestCheckResourceAttr(
-						"avi_autoscalelaunchconfig.testAutoScaleLaunchConfig", "name", "testdefault-autoscalelaunchconfig-abc")),
+						"avi_autoscalelaunchconfig.testAutoScaleLaunchConfig", "name", "test-default-autoscalelaunchconfig-updated"),
+					resource.TestCheckResourceAttr(
+						"avi_autoscalelaunchconfig.testAutoScaleLaunchConfig", "use_external_asg", "true"),
+				),
+			},
+			{
+				ResourceName:      "avi_autoscalelaunchconfig.testAutoScaleLaunchConfig",
+				ImportState:       true,
+				ImportStateVerify: false,
+				Config:            testAccAVIAutoScaleLaunchConfigConfig,
 			},
 		},
 	})
@@ -83,24 +95,24 @@ func testAccCheckAVIAutoScaleLaunchConfigDestroy(s *terraform.State) error {
 
 const testAccAVIAutoScaleLaunchConfigConfig = `
 data "avi_tenant" "default_tenant"{
-        name= "admin"
+    name= "admin"
 }
 resource "avi_autoscalelaunchconfig" "testAutoScaleLaunchConfig" {
-"tenant_ref" = "${data.avi_tenant.default_tenant.id}"
-"image_id" = "default"
-"use_external_asg" = true
-"name" = "testdefault-autoscalelaunchconfig"
+	image_id = "default"
+	use_external_asg = true
+	tenant_ref = data.avi_tenant.default_tenant.id
+	name = "test-default-autoscalelaunchconfig-abc"
 }
 `
 
 const testAccAVIAutoScaleLaunchConfigupdatedConfig = `
 data "avi_tenant" "default_tenant"{
-        name= "admin"
+    name= "admin"
 }
 resource "avi_autoscalelaunchconfig" "testAutoScaleLaunchConfig" {
-"tenant_ref" = "${data.avi_tenant.default_tenant.id}"
-"image_id" = "default"
-"use_external_asg" = true
-"name" = "testdefault-autoscalelaunchconfig-abc"
+	image_id = "default"
+	use_external_asg = true
+	tenant_ref = data.avi_tenant.default_tenant.id
+	name = "test-default-autoscalelaunchconfig-updated"
 }
 `

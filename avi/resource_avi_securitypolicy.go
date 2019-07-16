@@ -14,50 +14,54 @@ import (
 
 func ResourceSecurityPolicySchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"description": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"dns_attacks": &schema.Schema{
-			Type:     schema.TypeSet,
-			Optional: true,
-			Elem:     ResourceDnsAttacksSchema(),
-		},
-		"dns_policy_index": &schema.Schema{
-			Type:     schema.TypeInt,
-			Optional: true,
-			Default:  0,
-		},
-		"name": &schema.Schema{
-			Type:     schema.TypeString,
-			Required: true,
-		},
-		"network_security_policy_index": &schema.Schema{
-			Type:     schema.TypeInt,
-			Optional: true,
-			Default:  0,
-		},
-		"oper_mode": &schema.Schema{
-			Type:     schema.TypeString,
-			Optional: true,
-			Default:  "DETECTION",
-		},
-		"tcp_attacks": &schema.Schema{
-			Type:     schema.TypeSet,
-			Optional: true,
-			Elem:     ResourceTcpAttacksSchema(),
-		},
-		"tenant_ref": &schema.Schema{
+		"description": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
 		},
-		"udp_attacks": &schema.Schema{
+		"dns_attacks": {
 			Type:     schema.TypeSet,
 			Optional: true,
+			Computed: true,
+			Elem:     ResourceDnsAttacksSchema(),
+		},
+		"dns_policy_index": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Default:  0,
+		},
+		"name": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"network_security_policy_index": {
+			Type:     schema.TypeInt,
+			Optional: true,
+			Default:  0,
+		},
+		"oper_mode": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Default:  "DETECTION",
+		},
+		"tcp_attacks": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			Computed: true,
+			Elem:     ResourceTcpAttacksSchema(),
+		},
+		"tenant_ref": {
+			Type:     schema.TypeString,
+			Optional: true,
+			Computed: true,
+		},
+		"udp_attacks": {
+			Type:     schema.TypeSet,
+			Optional: true,
+			Computed: true,
 			Elem:     ResourceUdpAttacksSchema(),
 		},
-		"uuid": &schema.Schema{
+		"uuid": {
 			Type:     schema.TypeString,
 			Optional: true,
 			Computed: true,
